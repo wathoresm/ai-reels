@@ -5,6 +5,7 @@ import {
   GetObjectTaggingCommand,
   HeadObjectCommand,
   GetObjectCommand,
+  Tag
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -27,14 +28,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const enrichedObjects = await Promise.all(
       contents.map(async (obj) => {
         const key = obj.Key!;
-        let tags = [];
+        let tags: Tag[] = [];
         let metadata = {};
         let presignedUrl = "";
 
         try {
           const tagCommand = new GetObjectTaggingCommand({ Bucket: bucket, Key: key });
           const tagResponse = await s3.send(tagCommand);
-          tags = tagResponse.TagSet;
+          tags = tagResponse.TagSet ?? [];
         } catch (err) {
           console.warn(`Could not fetch tags for ${key}`);
         }

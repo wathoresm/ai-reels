@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PollyClient, SynthesizeSpeechCommand } from '@aws-sdk/client-polly';
+import { PollyClient, SynthesizeSpeechCommand, OutputFormat, VoiceId  } from '@aws-sdk/client-polly';
 import fs from 'fs/promises';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { Readable } from "stream";
 
 const polly = new PollyClient({
   region: process.env.AWS_REGION,
@@ -23,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const params = {
     Text: script,
-    OutputFormat: 'mp3',
-    VoiceId: 'Joanna',
+    OutputFormat: OutputFormat.MP3,
+    VoiceId: VoiceId.Joanna,
   };
 
   try {
@@ -45,9 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const outputPath = path.join(downloadDir, audioName);
+    
+    // Convert to async iterable if needed
+    const stream = Readable.from(data.AudioStream as any);
     const audioChunks: Uint8Array[] = [];
-
-    for await (const chunk of data.AudioStream) {
+    for await (const chunk of stream) {
       audioChunks.push(chunk as Uint8Array);
     }
 

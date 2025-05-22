@@ -8,6 +8,7 @@ interface VideoMeta {
   size: number;
   lastModified: string;
   presignedUrl: string;
+  metadata: any;
 }
 
 const Reels = () => {
@@ -131,7 +132,9 @@ const Reels = () => {
         >
           <div className="relative w-full h-full sm:w-[400px] sm:h-full">
             <video
-              ref={(el) => (videoRefs.current[index] = el)}
+              ref={(el) => {
+                videoRefs.current[index] = el;
+              }}
               data-index={index}
               src={`${video.presignedUrl}`}
               className="h-full w-full object-cover"
