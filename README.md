@@ -1,40 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🎬 AI Reels Generation App
 
-## Getting Started
+This project is a full-stack AI-powered application that generates short reels about sports celebrities. It uses OpenAI for script generation, Amazon Polly for audio synthesis, Unsplash for fetching images, and FFmpeg for final video creation.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🧠 Technical Breakdown
+
+### Frontend (Next.js)
+- Displays generated video reels fetched from AWS S3.
+- Fetches reels via: [`/api/s3`](https://ai-reels-sandy.vercel.app/api/s3)
+- Deployed on Vercel: [https://ai-reels-sandy.vercel.app](https://ai-reels-sandy.vercel.app)
+
+### Backend (Node.js)
+Deployed on Render: [https://ai-reels-generation.onrender.com](https://ai-reels-generation.onrender.com)
+
+#### API Endpoints
+| Endpoint | Description |
+|----------|-------------|
+| `/api/generate-script` | Generates a script using OpenAI based on a celebrity name. |
+| `/api/generate-audio` | Converts the generated script to speech using Amazon Polly. |
+| `/api/fetch-images` | Fetches relevant images from Unsplash using the celebrity name. |
+| `/api/generate-video` | Uses FFmpeg to combine the audio and images into a video. |
+
+---
+
+## 🚀 Demo Pipeline (Try It Live)
+
+To experience the full AI reel generation pipeline:
+
+🔗 [AI Script Generator Component](https://ai-reels-sandy.vercel.app/ai-script-generator)
+
+Steps:
+1. Enter a sports celebrity name.
+2. Generates a script with OpenAI.
+3. Converts the script to audio using Amazon Polly.
+4. Downloads related images from Unsplash.
+5. Generates a video using FFmpeg.
+6. Uploads the video to AWS S3.
+7. Reels are displayed on the homepage.
+
+---
+
+## 🌐 Deployment Links
+
+| Component | Tech Stack | URL |
+|----------|------------|-----|
+| **Frontend** | Next.js (Vercel) | [https://ai-reels-sandy.vercel.app](https://ai-reels-sandy.vercel.app) |
+| **Backend** | Node.js (Render) | [https://ai-reels-generation.onrender.com](https://ai-reels-generation.onrender.com) |
+
+---
+
+## 📂 Folder Structure
+
+```
+/frontend      # Next.js frontend app
+/backend       # Node.js backend API services
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technologies Used
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- OpenAI GPT
+- Amazon Polly
+- Unsplash API
+- FFmpeg
+- AWS S3
+- Next.js
+- Node.js
+- Render
+- Vercel
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✍️ Author
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Developed by [Sandeep Wathore]
