@@ -9,13 +9,13 @@ dotenv.config();
 
 const router = express.Router();
 
-// const polly = new PollyClient({
-//   region: process.env.AWS_REGION,
-//   credentials: {
-//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//   },
-// });
+const polly = new PollyClient({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 router.post('/generate-audio', async (req, res) => {
   const { script, celebrity } = req.body;
@@ -33,30 +33,30 @@ router.post('/generate-audio', async (req, res) => {
   };
 
   try {
-    // const command = new SynthesizeSpeechCommand(params);
-    // const data = await polly.send(command);
+    const command = new SynthesizeSpeechCommand(params);
+    const data = await polly.send(command);
 
-    // if (!data.AudioStream) {
-    //   return res.status(500).json({ error: 'No audio stream returned from Polly' });
-    // }
+    if (!data.AudioStream) {
+      return res.status(500).json({ error: 'No audio stream returned from Polly' });
+    }
 
-    // const downloadDir = path.join(process.cwd(), 'public', 'audio');
-    // await fs.mkdir(downloadDir, { recursive: true });
+    const downloadDir = path.join(process.cwd(), 'public', 'audio');
+    await fs.mkdir(downloadDir, { recursive: true });
 
-    // // Clean directory
-    // const files = await fs.readdir(downloadDir);
-    // await Promise.all(files.map(file => fs.unlink(path.join(downloadDir, file))));
+    // Clean directory
+    const files = await fs.readdir(downloadDir);
+    await Promise.all(files.map(file => fs.unlink(path.join(downloadDir, file))));
 
-    // const outputPath = path.join(downloadDir, audioName);
-    // const audioChunks = [];
+    const outputPath = path.join(downloadDir, audioName);
+    const audioChunks = [];
 
-    // for await (const chunk of data.AudioStream) {
-    //   audioChunks.push(chunk);
-    // }
+    for await (const chunk of data.AudioStream) {
+      audioChunks.push(chunk);
+    }
 
-    // await fs.writeFile(outputPath, Buffer.concat(audioChunks));
+    await fs.writeFile(outputPath, Buffer.concat(audioChunks));
 
-    const audioName = 'pele_b7a28b5a-f340-4b82-9667-2bafc2ba27e4.mp3';
+    // const audioName = 'pele_b7a28b5a-f340-4b82-9667-2bafc2ba27e4.mp3';
     const publicUrl = `/audio/${audioName}`;
     return res.status(200).json({ success: true, url: publicUrl, name: audioName });
   } catch (error) {
