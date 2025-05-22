@@ -16,14 +16,16 @@ export default function ScriptGenerator() {
   const [isImageDownloaded, setIsImageDownloaded] = useState(false);
   const [isVideoGenerated, setIsVideoGenerated] = useState(false);
 
+  
   async function handleGenerate() {
     setLoading(true);
     setError(null);
     setScript(null);
-
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    console.log(apiUrl);
     try {
       /* Script Generation Started */
-      const res = await fetch("/api/generate-script", {
+      const res = await fetch(`${apiUrl}/api/generate-script`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ celebrity }),
@@ -43,7 +45,7 @@ export default function ScriptGenerator() {
       
       if(res.ok && data?.script){
         /* Audio Generation From Script Started */
-        const resAudio = await fetch("/api/generate-audio", {
+        const resAudio = await fetch(`${apiUrl}/api/generate-audio`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ script:data.script, celebrity:celebrity }),
@@ -62,7 +64,7 @@ export default function ScriptGenerator() {
 
         if(resAudio.ok && dataAudio?.name) {
           /* Images downlaod Script Started */
-          const resImage = await fetch(`/api/fetch-images?query=${encodeURIComponent(celebrity)}`, {
+          const resImage = await fetch(`${apiUrl}/api/fetch-images?query=${encodeURIComponent(celebrity)}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" }
         });
@@ -80,7 +82,7 @@ export default function ScriptGenerator() {
         
           if(resImage.ok && dataImage?.files) {
             /* Video generation from audio + downloaded images Started */
-            const resVideo = await fetch("/api/generate-video", {
+            const resVideo = await fetch(`${apiUrl}/api/generate-video`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ audio:dataAudio.name, celebrity:celebrity, script:data.script }),

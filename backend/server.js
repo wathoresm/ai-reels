@@ -1,39 +1,29 @@
-const express = require("express");
-const cors = require("cors");
-const ffmpeg = require("fluent-ffmpeg");
-const path = require("path");
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import pollyRoute from './routes/polly.js';
+import openAiRoute from './routes/openai.js';
+import unsplashRoute from './routes/unsplash.js'; 
+import videoGenerateRoute from './routes/video.js'; 
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-
 app.use(cors());
 app.use(express.json());
+app.use('/public', express.static('public'));
+
+// Mount Api route
+app.use("/api", openAiRoute); // now your route is at /api/generate-script
+app.use('/api', pollyRoute); // now your route is at /api/generate-audio
+app.use('/api', unsplashRoute); // now your route is at /api/fetch-images
+app.use('/api', videoGenerateRoute); // now your route is at /api/generate-video
 
 app.get("/", (req, res) => {
-  res.send("FFmpeg backend is live!");
+  res.send("Backend is live!");
 });
 
-// Sample video generation endpoint (adjust based on your actual logic)
-app.post("/api/generate-video", async (req, res) => {
-  const inputAudio = path.join(__dirname, "input.mp3");
-  const outputVideo = path.join(__dirname, "output.mp4");
-  const image = path.join(__dirname, "image.jpg");
-
-  ffmpeg()
-    .input(image)
-    .loop(5)
-    .input(inputAudio)
-    .outputOptions("-shortest")
-    .save(outputVideo)
-    .on("end", () => {
-      res.json({ message: "Video generated", url: "/output.mp4" });
-    })
-    .on("error", (err) => {
-      console.error(err);
-      res.status(500).json({ error: "FFmpeg failed" });
-    });
-});
-
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
